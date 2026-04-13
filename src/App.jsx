@@ -1,95 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
-
-// Logo SVG Component
-const Logo = ({ size = 'normal' }) => {
-  const sizeMap = {
-    small: { width: 120, height: 80, fontSize: 20 },
-    normal: { width: 200, height: 140, fontSize: 32 },
-    large: { width: 280, height: 200, fontSize: 48 }
-  }
-  const s = sizeMap[size]
-  
-  return (
-    <svg width={s.width} height={s.height} viewBox="0 0 200 140" className="logo-svg">
-      <defs>
-        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#2D5A3D" />
-          <stop offset="100%" stopColor="#1A3D3D" />
-        </linearGradient>
-        <filter id="logoShadow" x="-50%" y="-50%" width="200%" height="200%">
-          <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.3" />
-        </filter>
-      </defs>
-      
-      {/* Background rounded rect */}
-      <rect x="5" y="5" width="190" height="130" rx="8" ry="8" fill="url(#logoGradient)" filter="url(#logoShadow)" />
-      
-      {/* Main text - MI FINCA */}
-      <text x="100" y="55" textAnchor="middle" fontSize={s.fontSize} fontWeight="900" fill="#D4A843" fontFamily="Arial, sans-serif">
-        MI FINCA
-      </text>
-      
-      {/* Subtext - FARM MARKETPLACE */}
-      <text x="100" y="85" textAnchor="middle" fontSize={s.fontSize * 0.35} fill="#D4A843" fontFamily="Arial, sans-serif" letterSpacing="2">
-        FARM MARKETPLACE
-      </text>
-      
-      {/* Decorative wheat */}
-      <g transform="translate(20, 35)">
-        <line x1="0" y1="30" x2="0" y2="0" stroke="#D4A843" strokeWidth="1.5" />
-        <ellipse cx="-3" cy="8" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="0" cy="12" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="3" cy="8" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="-3" cy="16" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="0" cy="20" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="3" cy="16" rx="2" ry="4" fill="#D4A843" />
-        <ellipse cx="-3" cy="24" rx="2" ry="4" fill="#D4A843" />
-      </g>
-      
-      {/* Decorative wheat right */}
-      <g transform="translate(175, 40)">
-        <line x1="0" y1="25" x2="0" y2="0" stroke="#D4A843" strokeWidth="1.5" />
-        <ellipse cx="-3" cy="6" rx="2" ry="3.5" fill="#D4A843" />
-        <ellipse cx="0" cy="10" rx="2" ry="3.5" fill="#D4A843" />
-        <ellipse cx="3" cy="6" rx="2" ry="3.5" fill="#D4A843" />
-        <ellipse cx="-3" cy="14" rx="2" ry="3.5" fill="#D4A843" />
-        <ellipse cx="0" cy="18" rx="2" ry="3.5" fill="#D4A843" />
-        <ellipse cx="3" cy="14" rx="2" ry="3.5" fill="#D4A843" />
-      </g>
-    </svg>
-  )
-}
-
-// Intersection Observer Hook for animations
-const useIntersectionObserver = (threshold = 0.2) => {
-  const ref = useRef(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(entry.target)
-        }
-      },
-      { threshold }
-    )
-
-    if (ref.current) {
-      observer.observe(ref.current)
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current)
-      }
-    }
-  }, [threshold])
-
-  return [ref, isVisible]
-}
 
 // Hero Form Component
 const HeroForm = () => {
@@ -105,14 +15,14 @@ const HeroForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, source: 'hero_form' })
       })
-      
+
       if (response.ok) {
         setSubmitted(true)
         setFormData({ nombre: '', whatsapp: '' })
@@ -177,7 +87,6 @@ const LeadForm = () => {
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [ref, isVisible] = useIntersectionObserver()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -187,14 +96,14 @@ const LeadForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, source: 'full_form' })
       })
-      
+
       if (response.ok) {
         setSubmitted(true)
         setFormData({
@@ -216,10 +125,7 @@ const LeadForm = () => {
   }
 
   return (
-    <div
-      ref={ref}
-      className={`full-form-container ${isVisible ? 'fade-in-up' : ''}`}
-    >
+    <div className="full-form-container">
       <form onSubmit={handleSubmit} className="lead-form">
         <div className="form-row">
           <div className="form-group full">
@@ -371,7 +277,7 @@ const Navigation = () => {
         </div>
 
         <button
-          className="hamburger"
+          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -392,16 +298,6 @@ const Navigation = () => {
   )
 }
 
-// Animated Section Component
-const AnimatedSection = ({ children, className = '' }) => {
-  const [ref, isVisible] = useIntersectionObserver()
-  return (
-    <div ref={ref} className={`${className} ${isVisible ? 'fade-in-up' : ''}`}>
-      {children}
-    </div>
-  )
-}
-
 // Main App Component
 export default function App() {
   return (
@@ -410,8 +306,12 @@ export default function App() {
 
       {/* Hero Section */}
       <section id="hero" className="hero-section">
+        <div className="hero-background"></div>
         <div className="hero-content">
-          <Logo size="large" />
+          <div className="hero-logo">
+            <div className="logo-text-large">MI FINCA</div>
+            <div className="logo-subtitle">FARM MARKETPLACE</div>
+          </div>
           <h1>Conectamos el campo colombiano con la tecnología</h1>
           <p className="hero-subtitle">
             Compra, vende y gestiona tu ganado desde una sola plataforma. Únete a la comunidad de ganaderos que están transformando su negocio.
@@ -419,7 +319,6 @@ export default function App() {
           <HeroForm />
           <p className="social-proof">✓ Más de 200 ganaderos ya están en lista de espera</p>
         </div>
-        <div className="hero-background"></div>
       </section>
 
       {/* Customer Profiles Section */}
@@ -429,29 +328,29 @@ export default function App() {
           <p className="section-subtitle">Somos la solución perfecta para diferentes actores del agro colombiano</p>
 
           <div className="profiles-grid">
-            <AnimatedSection className="profile-card">
+            <div className="profile-card">
               <div className="profile-emoji">👨‍🌾</div>
               <h3>Neoganadero</h3>
               <p>Quieres invertir en ganadería pero no sabes por dónde empezar. Te conectamos con expertos, te capacitamos y te acompañamos paso a paso.</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="profile-card">
+            <div className="profile-card">
               <div className="profile-emoji">🏔️</div>
               <h3>Ganadero en zona rural</h3>
               <p>Tienes ganado pero no tienes cómo ofrecerlo. Te damos visibilidad y te conectamos con compradores cercanos.</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="profile-card">
+            <div className="profile-card">
               <div className="profile-emoji">🌾</div>
               <h3>Proveedor de insumos y servicios</h3>
               <p>Vendes insumos, maquinaria o servicios para el campo. Te damos un canal directo para llegar a los ganaderos que necesitan lo que ofreces.</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="profile-card">
+            <div className="profile-card">
               <div className="profile-emoji">📈</div>
               <h3>Ganadero en expansión</h3>
               <p>Tecnifica tu operación con historial digital, filtros inteligentes y conexión directa con proveedores.</p>
-            </AnimatedSection>
+            </div>
           </div>
         </div>
       </section>
@@ -463,53 +362,53 @@ export default function App() {
           <p className="section-subtitle">Herramientas completas para tu negocio ganadero</p>
 
           <div className="features-grid">
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">🐄</div>
               <h3>Marketplace ganadero</h3>
               <p>Compra y venta de vacas, marranos, cabras y caballos en una sola plataforma</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">🏡</div>
               <h3>Terrenos</h3>
               <p>Compra, venta y arriendo de fincas con información completa y verificada</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">🔗</div>
               <h3>Conexión inteligente</h3>
               <p>Filtra por ubicación, raza, tipo de negocio, clima y distancia para encontrar exactamente lo que buscas</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">📊</div>
               <h3>Gestión de operación</h3>
               <p>Historial digital de tu finca y tu ganado todo en un solo lugar</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">📜</div>
               <h3>Certificaciones</h3>
               <p>Trayectoria certificada de tus animales y terrenos para mayor confianza</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">🌾</div>
               <h3>Agroinsumos</h3>
               <p>Encuentra proveedores cercanos a ti para todos tus insumos y necesidades</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">💰</div>
               <h3>Evaluación y financiación</h3>
               <p>Te ayudamos a evaluar y financiar tu proyecto ganadero con expertos</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="feature-card">
+            <div className="feature-card">
               <div className="feature-icon">👨‍🌾</div>
               <h3>Red de expertos</h3>
               <p>Conecta con profesionales del sector agro para asesoramiento especializado</p>
-            </AnimatedSection>
+            </div>
           </div>
         </div>
       </section>
@@ -521,7 +420,7 @@ export default function App() {
           <p className="section-subtitle">Elige el plan que mejor se adapta a tus necesidades</p>
 
           <div className="pricing-grid">
-            <AnimatedSection className="pricing-card">
+            <div className="pricing-card">
               <h3>Comunidad</h3>
               <p className="price-tag">$0 <span>/mes</span></p>
 
@@ -539,9 +438,9 @@ export default function App() {
               <button className="btn-pricing" data-gtm="pricing_community">
                 Unirme gratis
               </button>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection className="pricing-card featured">
+            <div className="pricing-card featured">
               <div className="badge">Recomendado</div>
               <h3>Premium</h3>
               <p className="price-tag">$49.900 <span>/mes</span></p>
@@ -560,7 +459,7 @@ export default function App() {
               <button className="btn-pricing btn-primary" data-gtm="pricing_premium">
                 Comenzar ahora
               </button>
-            </AnimatedSection>
+            </div>
           </div>
         </div>
       </section>

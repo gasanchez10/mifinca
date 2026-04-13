@@ -119,9 +119,13 @@ p {
 .logo-text {
   font-size: 1.5rem;
   font-weight: 900;
-  color: var(--color-primary);
+  color: var(--color-white);
   cursor: pointer;
   transition: color 0.3s ease;
+}
+
+.navbar.scrolled .logo-text {
+  color: var(--color-primary);
 }
 
 .logo-text:hover {
@@ -140,10 +144,14 @@ p {
 .hamburger span {
   width: 25px;
   height: 3px;
-  background-color: var(--color-primary);
+  background-color: var(--color-white);
   margin: 5px 0;
   transition: all 0.3s ease;
   border-radius: 2px;
+}
+
+.navbar.scrolled .hamburger span {
+  background-color: var(--color-primary);
 }
 
 .hamburger.active span:nth-child(1) {
@@ -168,10 +176,14 @@ p {
   border: none;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-white);
   cursor: pointer;
   transition: color 0.3s ease;
   padding: 0.5rem 1rem;
+}
+
+.navbar.scrolled .nav-links button {
+  color: var(--color-primary);
 }
 
 .nav-links button:hover {
@@ -219,12 +231,33 @@ p {
   margin: 0 auto;
   color: white;
   animation: fadeInUp 0.8s ease-out;
+  padding: 0 20px;
+}
+
+.hero-logo {
+  margin-bottom: 2rem;
+}
+
+.logo-text-large {
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.logo-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-accent);
+  letter-spacing: 3px;
+  font-weight: 600;
 }
 
 .hero-content h1 {
   color: white;
   font-size: 3.5rem;
   margin-bottom: 1.5rem;
+  animation: fadeInDown 0.8s ease-out 0.2s both;
 }
 
 .hero-subtitle {
@@ -232,12 +265,7 @@ p {
   font-size: 1.25rem;
   margin-bottom: 2rem;
   line-height: 1.6;
-}
-
-.logo-svg {
-  margin: 0 auto 2rem;
-  display: block;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .hero-form {
@@ -249,6 +277,7 @@ p {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .form-group {
@@ -317,29 +346,32 @@ p {
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   margin-top: 1.5rem;
+  animation: fadeInUp 0.8s ease-out 0.5s both;
 }
 
 /* Perfiles Section */
 .perfiles-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
   background-color: var(--color-white);
 }
 
 .profiles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
 
 .profile-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2rem;
   text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  opacity: 1;
+  visibility: visible;
 }
 
 .profile-card:hover {
@@ -364,7 +396,7 @@ p {
 
 /* Features Section */
 .features-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
   background: linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(45, 90, 61, 0.05) 100%);
 }
 
@@ -377,12 +409,14 @@ p {
 
 .feature-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2rem;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
   border: 2px solid var(--color-border);
+  opacity: 1;
+  visibility: visible;
 }
 
 .feature-card:hover {
@@ -409,7 +443,7 @@ p {
 
 /* Pricing Section */
 .pricing-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
   background-color: var(--color-white);
 }
 
@@ -425,18 +459,29 @@ p {
 
 .pricing-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 2.5rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   border: 2px solid var(--color-border);
   position: relative;
   transition: all 0.3s ease;
+  opacity: 1;
+  visibility: visible;
 }
 
 .pricing-card.featured {
   transform: scale(1.05);
   border-color: var(--color-accent);
   box-shadow: 0 12px 40px rgba(212, 168, 67, 0.25);
+}
+
+.pricing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.pricing-card.featured:hover {
+  transform: scale(1.05) translateY(-4px);
 }
 
 .pricing-card h3 {
@@ -529,7 +574,7 @@ p {
 
 /* Formulario Section */
 .formulario-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
   background: linear-gradient(180deg, rgba(212, 168, 67, 0.08) 0%, rgba(45, 90, 61, 0.05) 100%);
 }
 
@@ -537,10 +582,12 @@ p {
   max-width: 700px;
   margin: 3rem auto 0;
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 3rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   border: 2px solid var(--color-border);
+  opacity: 1;
+  visibility: visible;
 }
 
 .lead-form {
@@ -721,6 +768,17 @@ p {
   }
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes slideInUp {
   from {
     opacity: 0;
@@ -738,25 +796,6 @@ p {
   }
   50% {
     transform: scale(1.05);
-  }
-}
-
-.fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.fade-in-left {
-  animation: fadeInLeft 0.6s ease-out forwards;
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 
@@ -788,6 +827,7 @@ p {
   .nav-links button {
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--color-border);
+    color: var(--color-primary);
   }
 
   h1 {
@@ -808,13 +848,12 @@ p {
     font-size: 2rem;
   }
 
-  .hero-subtitle {
-    font-size: 1rem;
+  .logo-text-large {
+    font-size: 2.5rem;
   }
 
-  .logo-svg {
-    width: 200px;
-    height: 140px;
+  .hero-subtitle {
+    font-size: 1rem;
   }
 
   .hero-form {
@@ -856,6 +895,13 @@ p {
   .section-subtitle {
     margin-bottom: 2rem;
   }
+
+  .perfiles-section,
+  .features-section,
+  .pricing-section,
+  .formulario-section {
+    padding: 4rem 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -881,6 +927,10 @@ p {
 
   .hero-content {
     padding: 0 15px;
+  }
+
+  .logo-text-large {
+    font-size: 2rem;
   }
 
   .hero-form {
@@ -936,5 +986,12 @@ p {
 
   .footer-content {
     gap: 1.5rem;
+  }
+
+  .perfiles-section,
+  .features-section,
+  .pricing-section,
+  .formulario-section {
+    padding: 3rem 0;
   }
 }
