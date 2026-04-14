@@ -969,6 +969,76 @@ h1, h2, h3, h4 {
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* Phone Input with Flag */
+.phone-input {
+  display: flex;
+  align-items: stretch;
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.phone-input:focus-within {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
+}
+
+.phone-prefix {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.85rem;
+  background: #F2EFE8;
+  color: var(--ink-700);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-right: 1px solid rgba(20, 57, 42, 0.1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.flag-co {
+  display: inline-flex;
+  flex-direction: column;
+  width: 22px;
+  height: 16px;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.flag-yellow { flex: 2; background: #FCD116; }
+.flag-blue   { flex: 1; background: #003893; }
+.flag-red    { flex: 1; background: #CE1126; }
+
+.phone-input input[type="tel"] {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.95rem 1rem !important;
+  font-size: 0.95rem;
+  color: var(--ink-900);
+  min-width: 0;
+  box-shadow: none !important;
+}
+
+.phone-input input[type="tel"]:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+
+/* Hero form adjustments for phone input */
+.hero-form .phone-input {
+  border: none;
+}
+
+.hero-form .phone-input:focus-within {
+  box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.4);
+}
+
 /* Whatsapp */
 .whatsapp-button {
   position: fixed;

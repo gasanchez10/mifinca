@@ -19,10 +19,12 @@ const HeroForm = () => {
     setError('')
 
     try {
+      const cleanPhone = formData.whatsapp.replace(/\s+/g, '')
+      const fullPhone = cleanPhone.startsWith('+') ? cleanPhone : `+57${cleanPhone}`
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, source: 'hero_form' })
+        body: JSON.stringify({ ...formData, whatsapp: fullPhone, source: 'hero_form' })
       })
 
       if (response.ok) {
@@ -52,14 +54,27 @@ const HeroForm = () => {
         />
       </div>
       <div className="form-group">
-        <input
-          type="tel"
-          name="whatsapp"
-          placeholder="WhatsApp (ej: +57 300 123 4567)"
-          value={formData.whatsapp}
-          onChange={handleChange}
-          required
-        />
+        <div className="phone-input">
+          <span className="phone-prefix">
+            <span className="flag-co" aria-label="Colombia">
+              <span className="flag-yellow"></span>
+              <span className="flag-blue"></span>
+              <span className="flag-red"></span>
+            </span>
+            +57
+          </span>
+          <input
+            type="tel"
+            name="whatsapp"
+            placeholder="300 123 4567"
+            value={formData.whatsapp}
+            onChange={handleChange}
+            inputMode="numeric"
+            pattern="[0-9\s]*"
+            maxLength="13"
+            required
+          />
+        </div>
       </div>
       <button
         type="submit"
@@ -105,10 +120,12 @@ const LeadForm = () => {
     setError('')
 
     try {
+      const cleanPhone = formData.whatsapp.replace(/\s+/g, '')
+      const fullPhone = cleanPhone.startsWith('+') ? cleanPhone : `+57${cleanPhone}`
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, source: 'full_form' })
+        body: JSON.stringify({ ...formData, whatsapp: fullPhone, source: 'full_form' })
       })
 
       if (response.ok) {
@@ -153,14 +170,28 @@ const LeadForm = () => {
         <div className="form-row">
           <div className="form-group full">
             <label htmlFor="whatsapp">WhatsApp</label>
-            <input
-              type="tel"
-              id="whatsapp"
-              name="whatsapp"
-              value={formData.whatsapp}
-              onChange={handleChange}
-              required
-            />
+            <div className="phone-input">
+              <span className="phone-prefix">
+                <span className="flag-co" aria-label="Colombia">
+                  <span className="flag-yellow"></span>
+                  <span className="flag-blue"></span>
+                  <span className="flag-red"></span>
+                </span>
+                +57
+              </span>
+              <input
+                type="tel"
+                id="whatsapp"
+                name="whatsapp"
+                placeholder="300 123 4567"
+                value={formData.whatsapp}
+                onChange={handleChange}
+                inputMode="numeric"
+                pattern="[0-9\s]*"
+                maxLength="13"
+                required
+              />
+            </div>
           </div>
         </div>
 
@@ -579,7 +610,7 @@ export default function App() {
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" data-gtm="footer_facebook">
                   Facebook
                 </a>
-                <a href="https://wa.me/573001234567" target="_blank" rel="noopener noreferrer" data-gtm="footer_whatsapp">
+                <a href="https://wa.me/573013382345" target="_blank" rel="noopener noreferrer" data-gtm="footer_whatsapp">
                   WhatsApp
                 </a>
               </div>
@@ -588,7 +619,7 @@ export default function App() {
             <div className="footer-contact">
               <h4>Contacto</h4>
               <p>hola@mifinca.com</p>
-              <p>+57 (300) 123-4567</p>
+              <p>+57 301 338 2345</p>
             </div>
           </div>
 
@@ -601,7 +632,7 @@ export default function App() {
 
       {/* Floating WhatsApp Button */}
       <a
-        href="https://wa.me/573001234567"
+        href="https://wa.me/573013382345"
         className="whatsapp-button"
         target="_blank"
         rel="noopener noreferrer"
