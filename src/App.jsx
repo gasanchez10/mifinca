@@ -1,5 +1,31 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom'
 import './App.css'
+
+const GA_MEASUREMENT_ID = 'G-SFDZ3QVBYP'
+
+function gtagVirtualPageView(pagePath) {
+  if (typeof window.gtag !== 'function') return
+  window.gtag('config', GA_MEASUREMENT_ID, { page_path: pagePath })
+}
+
+const ROUTE_SECTION = {
+  '/': 'hero',
+  '/perfiles': 'perfiles',
+  '/plataforma': 'showcase',
+  '/caracteristicas': 'features',
+  '/planes': 'pricing',
+  '/contacto': 'formulario',
+}
+
+const ROUTE_TITLE = {
+  '/': 'MI FINCA | Inicio',
+  '/perfiles': 'MI FINCA | Perfiles',
+  '/plataforma': 'MI FINCA | Plataforma',
+  '/caracteristicas': 'MI FINCA | Características',
+  '/planes': 'MI FINCA | Planes',
+  '/contacto': 'MI FINCA | Contacto',
+}
 
 // Hero Form Component
 const HeroForm = () => {
@@ -34,7 +60,7 @@ const HeroForm = () => {
       } else {
         setError('No pudimos registrar tu información. Inténtalo de nuevo.')
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión. Por favor intenta de nuevo.')
     } finally {
       setLoading(false)
@@ -80,7 +106,6 @@ const HeroForm = () => {
         type="submit"
         className="btn-hero"
         disabled={loading}
-        data-gtm="hero_form_submit"
       >
         {loading ? 'Enviando...' : 'Quiero unirme'}
       </button>
@@ -143,7 +168,7 @@ const LeadForm = () => {
       } else {
         setError('No pudimos registrar tu información. Inténtalo de nuevo.')
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión. Por favor intenta de nuevo.')
     } finally {
       setLoading(false)
@@ -274,7 +299,6 @@ const LeadForm = () => {
           type="submit"
           className="btn-submit"
           disabled={loading}
-          data-gtm="lead_form_submit"
         >
           {loading ? 'Enviando...' : 'Enviar y agendar mi reunión'}
         </button>
@@ -304,18 +328,14 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId)
-    element?.scrollIntoView({ behavior: 'smooth' })
-    setIsMenuOpen(false)
-  }
+  const closeMenu = () => setIsMenuOpen(false)
 
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="nav-container">
-        <div className="logo-text" onClick={() => scrollToSection('hero')}>
+        <Link to="/" className="logo-text" onClick={closeMenu}>
           MI FINCA
-        </div>
+        </Link>
 
         <button
           className={`hamburger ${isMenuOpen ? 'active' : ''}`}
@@ -328,11 +348,21 @@ const Navigation = () => {
         </button>
 
         <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-          <button onClick={() => scrollToSection('hero')}>Inicio</button>
-          <button onClick={() => scrollToSection('perfiles')}>Perfiles</button>
-          <button onClick={() => scrollToSection('features')}>Características</button>
-          <button onClick={() => scrollToSection('pricing')}>Planes</button>
-          <button onClick={() => scrollToSection('formulario')}>Contacto</button>
+          <Link to="/" onClick={closeMenu}>
+            Inicio
+          </Link>
+          <Link to="/perfiles" onClick={closeMenu}>
+            Perfiles
+          </Link>
+          <Link to="/caracteristicas" onClick={closeMenu}>
+            Características
+          </Link>
+          <Link to="/planes" onClick={closeMenu}>
+            Planes
+          </Link>
+          <Link to="/contacto" onClick={closeMenu}>
+            Contacto
+          </Link>
         </div>
       </div>
     </nav>
@@ -379,8 +409,34 @@ const features = [
   { icon: '👨‍🌾', title: 'Red de expertos', desc: 'Conecta con profesionales del sector agro para asesoramiento especializado' },
 ]
 
-// Main App Component
-export default function App() {
+// Main landing (una sola “página”; rutas distintas para GA4 y enlaces de campaña)
+function LandingPage() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const gtagFirstPaint = useRef(true)
+
+  useLayoutEffect(() => {
+    const path = location.pathname
+    document.title = ROUTE_TITLE[path] || ROUTE_TITLE['/']
+
+    const sectionId = ROUTE_SECTION[path]
+    if (path === '/' || sectionId === 'hero') {
+      window.scrollTo(0, 0)
+    } else {
+      const el = document.getElementById(sectionId)
+      requestAnimationFrame(() => {
+        el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    }
+
+    const pagePath = `${path}${location.search || ''}`
+    if (gtagFirstPaint.current) {
+      gtagFirstPaint.current = false
+      return
+    }
+    gtagVirtualPageView(pagePath)
+  }, [location.pathname, location.search])
+
   return (
     <div className="app">
       <Navigation />
@@ -464,7 +520,7 @@ export default function App() {
       </section>
 
       {/* Features Showcase with Image */}
-      <section className="showcase-section">
+      <section id="showcase" className="showcase-section">
         <div className="container showcase-grid">
           <div className="showcase-image">
             <img
@@ -542,9 +598,9 @@ export default function App() {
               </ul>
 
               <button
+                type="button"
                 className="btn-pricing"
-                data-gtm="pricing_community"
-                onClick={() => document.getElementById('formulario')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate('/contacto')}
               >
                 Unirme gratis
               </button>
@@ -568,9 +624,9 @@ export default function App() {
               </ul>
 
               <button
+                type="button"
                 className="btn-pricing btn-primary"
-                data-gtm="pricing_premium"
-                onClick={() => document.getElementById('formulario')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => navigate('/contacto')}
               >
                 Comenzar ahora
               </button>
@@ -604,13 +660,13 @@ export default function App() {
             <div className="footer-social">
               <h4>Síguenos</h4>
               <div className="social-links">
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" data-gtm="footer_instagram">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
                   Instagram
                 </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" data-gtm="footer_facebook">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                   Facebook
                 </a>
-                <a href="https://wa.me/573013382345" target="_blank" rel="noopener noreferrer" data-gtm="footer_whatsapp">
+                <a href="https://wa.me/573013382345" target="_blank" rel="noopener noreferrer">
                   WhatsApp
                 </a>
               </div>
@@ -637,10 +693,23 @@ export default function App() {
         target="_blank"
         rel="noopener noreferrer"
         title="Contáctanos por WhatsApp"
-        data-gtm="whatsapp_floating"
       >
         💬
       </a>
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/perfiles" element={<LandingPage />} />
+      <Route path="/plataforma" element={<LandingPage />} />
+      <Route path="/caracteristicas" element={<LandingPage />} />
+      <Route path="/planes" element={<LandingPage />} />
+      <Route path="/contacto" element={<LandingPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }

@@ -134,6 +134,7 @@ h1, h2, h3, h4 {
   cursor: pointer;
   letter-spacing: 0.05em;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .navbar.scrolled .logo-text { color: var(--green-700); }
@@ -144,7 +145,7 @@ h1, h2, h3, h4 {
   align-items: center;
 }
 
-.nav-links button {
+.nav-links a {
   background: transparent;
   border: none;
   color: var(--white);
@@ -155,11 +156,12 @@ h1, h2, h3, h4 {
   padding: 0.5rem 0;
   position: relative;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
-.navbar.scrolled .nav-links button { color: var(--ink-700); }
+.navbar.scrolled .nav-links a { color: var(--ink-700); }
 
-.nav-links button::after {
+.nav-links a::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -170,9 +172,9 @@ h1, h2, h3, h4 {
   transition: width 0.3s ease;
 }
 
-.nav-links button:hover::after { width: 100%; }
-.nav-links button:hover { color: var(--gold-500); }
-.navbar.scrolled .nav-links button:hover { color: var(--green-700); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a:hover { color: var(--gold-500); }
+.navbar.scrolled .nav-links a:hover { color: var(--green-700); }
 
 .hamburger {
   display: none;
@@ -1106,7 +1108,7 @@ h1, h2, h3, h4 {
     pointer-events: all;
   }
 
-  .nav-links button {
+  .nav-links a {
     color: var(--ink-700);
     text-align: left;
     width: 100%;
